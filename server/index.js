@@ -6,7 +6,7 @@ const express = require('express');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const fallback = require('express-history-api-fallback');
-
+const redisClient = require('./config/redis');
 const { name, version } = require('../package.json');
 const logger = require('./libs/logger');
 
@@ -16,8 +16,9 @@ app.set('trust proxy', true);
 app.use(cookieParser());
 app.use(express.json({ limit: '1 mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1 mb' }));
-
+redisClient.init();
 const router = express.Router();
+
 router.use('/api', require('./routes'));
 
 const isDevelopment = process.env.NODE_ENV === 'development';
